@@ -6,10 +6,10 @@ pipeline {
     triggers { cron(cron_string) }
 
     stages {
-        stage('Jenkins') {
-                steps {
-                    sh 'robo execute jmartz-jenkins'
-                }
+        stage('jmartz.de') {
+            steps {
+                sh 'robo execute jmartz.de'
             }
+        }
     }
 }
