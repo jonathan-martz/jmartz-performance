@@ -7,7 +7,6 @@ class RoboFile extends \Robo\Tasks
 		$filename = 'page.json';
 		$file = file_get_contents($filename);
 
-		$this->taskNpmInstall()->run();
 		$folder = "reports";
 
 		if(strlen($file) > 0){
