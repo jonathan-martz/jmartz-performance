@@ -16,7 +16,7 @@ class RoboFile extends \Robo\Tasks
 			foreach($pages as $page){
 				if($page['name'] == $name){
 					foreach($page['urls'] as $url){
-						$this->_exec('lighthouse --output json --output-path --chrome-flags="--headless" '.$folder.'/'.$url['title'].'.json '.$url['url']);
+						$this->_exec('lighthouse --output json --chrome-flags="--headless" --output-path '.$folder.'/'.$url['title'].'.json '.$url['url']);
 					}
 				}
 			}
