@@ -9,6 +9,7 @@ class RoboFile extends \Robo\Tasks
 
 		$folder = 'reports/'.date('d-m-y-H').'/';
 
+		$this->_exec('mkdir reports');
 		$this->_exec('mkdir '.$folder);
 
 		if(strlen($file) > 0){
