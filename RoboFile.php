@@ -28,7 +28,7 @@ class RoboFile extends \Robo\Tasks
 			 ->fromPath('reports')
 			 ->toHost('195.201.38.163')
 			 ->toUser('root')
-			 ->toPath('/var/www/performance.jmartz.de/')
+			 ->toPath('/var/www/performance.jmartz.de/shared/reports/'.date('d-m-y-H').'/')
 			 ->recursive()
 			 ->progress()
 			 ->run();
