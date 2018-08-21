@@ -7,7 +7,7 @@ class RoboFile extends \Robo\Tasks
 		$filename = 'page.json';
 		$file = file_get_contents($filename);
 
-		$folder = "reports";
+		$folder = 'reports/'.date('d-m-y-H').'/';
 
 		$this->_exec('mkdir '.$folder);
 
@@ -25,10 +25,10 @@ class RoboFile extends \Robo\Tasks
 
 	public function copy(){
 		$this->taskRsync()
-			 ->fromPath('reports/*.json')
+			 ->fromPath('reports')
 			 ->toHost('195.201.38.163')
 			 ->toUser('root')
-			 ->toPath('/var/www/performance.jmartz.de/shared/reports/'.date('d-m-y-H').'/')
+			 ->toPath('/var/www/performance.jmartz.de/shared/reports')
 			 ->recursive()
 			 ->progress()
 			 ->run();
