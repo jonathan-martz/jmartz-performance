@@ -25,7 +25,7 @@ class RoboFile extends \Robo\Tasks
 
 	public function copy(){
 		$this->taskRsync()
-			 ->fromPath('reports')
+			 ->fromPath('reports/*.json')
 			 ->toHost('195.201.38.163')
 			 ->toUser('root')
 			 ->toPath('/var/www/performance.jmartz.de/shared/reports/'.date('d-m-y-H').'/')
