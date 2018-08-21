@@ -9,6 +9,8 @@ class RoboFile extends \Robo\Tasks
 
 		$folder = "reports";
 
+		$this->_exec('mkdir '.$folder);
+
 		if(strlen($file) > 0){
 			$pages = json_decode($file, JSON_FORCE_OBJECT);
 			foreach($pages as $page){
@@ -19,6 +21,17 @@ class RoboFile extends \Robo\Tasks
 				}
 			}
 		}
+	}
+
+	public function copy(){
+		$this->taskRsync()
+			 ->fromPath('reports')
+			 ->toHost('195.201.38.163')
+			 ->toUser('root')
+			 ->toPath('/var/www/performance.jmartz.de/')
+			 ->recursive()
+			 ->progress()
+			 ->run();
 	}
 }
 
