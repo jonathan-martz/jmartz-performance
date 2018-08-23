@@ -1,0 +1,14 @@
+{
+  "name": "hetzner-performance",
+  "version": "1.0.0",
+  "description": "",
+  "dependencies": {
+      "lighthouse": "^3.0.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/MkaaaaaaaY/hetzner-performance.git"
+  },
+  "author": "Jonathan Martz",
+  "homepage": "https://bitbucket.org/MkaaaaaaaY/hetzner-performance#readme"
+}
