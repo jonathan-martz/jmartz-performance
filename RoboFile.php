@@ -27,14 +27,24 @@ class RoboFile extends \Robo\Tasks
 	}
 
 	public function copy(){
+		$ip = '195.201.38.163';
+		$user = 'root';
+		$dir = '/var/www/performance.jmartz.de/shared/';
+
 		$this->taskRsync()
 			 ->fromPath('reports')
-			 ->toHost('195.201.38.163')
-			 ->toUser('root')
-			 ->toPath('/var/www/performance.jmartz.de/shared')
+			 ->toHost($ip)
+			 ->toUser($user)
+			 ->toPath($dir)
 			 ->recursive()
 			 ->progress()
 			 ->run();
+
+		$this->taskSshExec($ip, $user)
+			->remoteDir($dir)
+			->exec('chown -R www-data:www-data reports')
+			->run();
+
 	}
 }
 
