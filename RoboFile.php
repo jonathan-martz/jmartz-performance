@@ -18,7 +18,7 @@ class RoboFile extends \Robo\Tasks
 
 	public function execute()
 	{
-		$filename = 'lighthouse.json';
+		$filename = 'config/lighthouse.json';
 		$file = file_get_contents($filename);
 
 		$folder = 'reports/'.date('d-m-y-H');
