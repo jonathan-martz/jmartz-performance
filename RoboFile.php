@@ -37,7 +37,7 @@ class RoboFile extends \Robo\Tasks
 			$pages = json_decode($file, JSON_FORCE_OBJECT);
 			foreach($pages as $page){
 				foreach($page['urls'] as $url){
-					$this->_exec('lighthouse --output json --chrome-flags="--headless" --output-path '.$folder.'/'.$url['title'].'.json '.$url['url']);
+					$this->_exec('lighthouse --output json --chrome-flags="--headless" --output-path '.$folder.'/lighthouse-'.$url['title'].'.json '.$url['url']);
 				}
 			}
 		}
