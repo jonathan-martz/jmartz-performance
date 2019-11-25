@@ -7,7 +7,7 @@ class RoboFile extends \Robo\Tasks
 		$filename = 'page.json';
 		$file = file_get_contents($filename);
 
-		$folder = 'reports/'.date('d-m-y-H').'/';
+		$folder = 'reports/'.date('d-m-y-H');
 
 		$this->_exec('mkdir reports');
 		$this->_exec('mkdir '.$folder);
