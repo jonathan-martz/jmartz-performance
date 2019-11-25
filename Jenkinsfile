@@ -3,9 +3,14 @@ pipeline {
     agent any
 
     stages {
-        stage('jmartz.de') {
+        stage('Load config') {
+                steps {
+                    sh 'robo load:config'
+                }
+            }
+        stage('Lighthouse') {
             steps {
-                sh 'robo execute jmartz.de'
+                sh 'robo execute'
             }
         }
         stage('copy reports') {

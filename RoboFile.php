@@ -2,25 +2,42 @@
 
 class RoboFile extends \Robo\Tasks
 {
-	public function execute($name)
+	public function loadConfig(){
+		$ip = '195.201.38.163';
+		$user = 'root';
+
+		$this->taskRsync()
+			->toPath('.')
+			->fromHost($ip)
+			->fromUser($user)
+			->fromPath('/var/www/performance.jmartz.de/shared/config')
+			->recursive()
+			->progress()
+			->run();
+	}
+
+	public function execute()
 	{
-		$filename = 'page.json';
+		$filename = 'lighthouse.json';
 		$file = file_get_contents($filename);
 
 		$folder = 'reports/'.date('d-m-y-H').'/';
 
-		$this->_exec('mkdir reports');
-		$this->_exec('mkdir '.$folder);
+		if(!file_exists('reports')){
+			$this->_exec('mkdir reports');
+		}
+
+		if(!file_exists($folder)){
+			$this->_exec('mkdir '.$folder);
+		}
 
 		$this->taskNpmInstall()->run();
 
 		if(strlen($file) > 0){
 			$pages = json_decode($file, JSON_FORCE_OBJECT);
 			foreach($pages as $page){
-				if($page['name'] == $name){
-					foreach($page['urls'] as $url){
-						$this->_exec('lighthouse --output json --chrome-flags="--headless" --output-path '.$folder.'/'.$url['title'].'.json '.$url['url']);
-					}
+				foreach($page['urls'] as $url){
+					$this->_exec('lighthouse --output json --chrome-flags="--headless" --output-path '.$folder.'/'.$url['title'].'.json '.$url['url']);
 				}
 			}
 		}
