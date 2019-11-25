@@ -12,8 +12,6 @@ class RoboFile extends \Robo\Tasks
 		$this->_exec('mkdir reports');
 		$this->_exec('mkdir '.$folder);
 
-		$this->taskNpmInstall()->run();
-
 		if(strlen($file) > 0){
 			$pages = json_decode($file, JSON_FORCE_OBJECT);
 			foreach($pages as $page){
