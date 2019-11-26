@@ -3,9 +3,9 @@ pipeline {
     agent any
 
     stages {
-        stage('Load config') {
+        stage('Download config') {
                 steps {
-                    sh 'robo load:config'
+                    sh 'robo download:config'
                 }
             }
         stage('Lighthouse') {

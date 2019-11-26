@@ -1,66 +1,137 @@
 <?php
 
-class RoboFile extends \Robo\Tasks
+use \Robo\Tasks;
+
+/**
+ * Class RoboFile
+ */
+class RoboFile extends Tasks
 {
-	public function loadConfig(){
-		$ip = '195.201.38.163';
-		$user = 'root';
+    /**
+     * @var array
+     */
+    const config = 'config';
 
-		$this->taskRsync()
-			->toPath('.')
-			->fromHost($ip)
-			->fromUser($user)
-			->fromPath('/var/www/performance.jmartz.de/shared/config')
-			->recursive()
-			->progress()
-			->run();
-	}
+    /**
+     * @var string
+     */
+    const server = 'server.json';
 
-	public function execute()
-	{
-		$filename = 'config/lighthouse.json';
-		$file = file_get_contents($filename);
+    /**
+     * @var string
+     */
+    const lighthouse = 'lighthouse.json';
 
-		$folder = 'reports/'.date('d-m-y-H');
+    /**
+     * @var string
+     */
+    const reports = 'reports';
 
-		if(!file_exists('reports')){
-			$this->_exec('mkdir reports');
-		}
+    /**
+     * @var string
+     */
+    public $date = '';
 
-		if(!file_exists($folder)){
-			$this->_exec('mkdir '.$folder);
-		}
+    /**
+     * @var array
+     */
+    public $config = [];
 
-		if(strlen($file) > 0){
-			$pages = json_decode($file, JSON_FORCE_OBJECT);
-			foreach($pages as $page){
-				foreach($page['urls'] as $url){
-					$this->_exec('lighthouse --output json --chrome-flags="--headless" --output-path '.$folder.'/lighthouse-'.$url['title'].'.json '.$url['url']);
-				}
-			}
-		}
-	}
+    /**
+     * RoboFile constructor.
+     */
+    public function __construct()
+    {
+        $this->date = date('d-m-y-H-i');
+    }
 
-	public function copy(){
-		$ip = '195.201.38.163';
-		$user = 'root';
-		$dir = '/var/www/performance.jmartz.de/shared/';
+	/**
+	 * @return void
+	 */
+	public function downloadConfig(): void
+    {
+        // Todo: replace strings with config
+        $ip = '195.201.38.163';
+        $user = 'root';
+        $folder = '/var/www/performance.jmartz.de/shared/';
 
-		$this->taskRsync()
-			 ->fromPath('reports')
-			 ->toHost($ip)
-			 ->toUser($user)
-			 ->toPath($dir)
-			 ->recursive()
-			 ->progress()
-			 ->run();
+        $this->taskRsync()
+            ->toPath('.')
+            ->fromHost($ip)
+            ->fromUser($user)
+            ->fromPath($folder . self::config)
+            ->recursive()
+            ->progress()
+            ->run();
+    }
 
-		$this->taskSshExec($ip, $user)
-			->remoteDir($dir)
-			->exec('chown -R www-data:www-data reports')
-			->run();
+	/**
+	 * @return array
+	 */
+	public function loadLighthouseConfig(): array
+    {
+        $filename = self::config . '/' . self::lighthouse;
+        $file = file_get_contents($filename);
+        return json_decode($file, JSON_FORCE_OBJECT);
+    }
 
-	}
+	/**
+	 * @return array
+	 */
+	public function loadServerConfig(): array
+    {
+        $filename = self::config . '/' . self::server;
+        $file = file_get_contents($filename);
+        return json_decode($file, JSON_FORCE_OBJECT);
+    }
+
+	/**
+	 * @return void
+	 */
+	public function execute(): void
+    {
+        $pages = $this->loadLighthouseConfig();
+
+        $folder = self::reports . '/' . $this->date;
+
+        if (!file_exists(self::reports)) {
+            $this->_exec('mkdir ' . self::reports);
+        }
+
+        if (!file_exists($folder)) {
+            $this->_exec('mkdir ' . $folder);
+        }
+
+        if (count($pages) > 0) {
+            foreach ($pages as $page) {
+                foreach ($page['urls'] as $url) {
+                    $this->_exec('lighthouse --output json --chrome-flags="--headless" --output-path ' . $folder . '/lighthouse-' . $url['title'] . '.json ' . $url['url']);
+                }
+            }
+        }
+    }
+
+	/**
+	 * @return void
+	 */
+	public function copy(): void
+    {
+        $this->config['server'] = $this->loadServerConfig();
+
+        $this->taskRsync()
+            ->fromPath('reports')
+            ->toHost($this->config['server']['ip'])
+            ->toUser($this->config['server']['user'])
+            ->toPath($this->config['server']['folder'])
+            ->recursive()
+            ->progress()
+            ->run();
+
+        $this->taskSshExec($this->config['server']['ip'], $this->config['server']['user'])
+            ->remoteDir($this->config['server']['folder'])
+            ->exec('chown -R www-data:www-data '.self::reports)
+            ->run();
+    }
 }
 
 ?>
