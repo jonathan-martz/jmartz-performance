@@ -9,6 +9,7 @@
     ],
     "require": {
         "php": "^7.1|^7.2|^7.3",
-        "ext-json": "*"
+        "ext-json": "*",
+        "consolidation/robo": "^2.0.0"
     }
 }

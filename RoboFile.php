@@ -103,17 +103,22 @@ class RoboFile extends Tasks
         }
 
         if (count($pages) > 0) {
-            $exec = $this->taskParallelExec();
             foreach ($pages as $page) {
                 foreach ($page['urls'] as $url) {
-                    $exec->process('lighthouse --output json --chrome-flags="--headless" --output-path ' . $folder . '/lighthouse-' . $url['title'] . '.json ' . $url['url']);
+                    $this->_exec('lighthouse --output json --chrome-flags="--headless" --output-path ' . $folder . '/lighthouse-' . $url['title'] . '.json ' . $url['url']);
                 }
             }
-            $exec->run();
         }
     }
 
-	/**
+    /**
+     * @return void
+     */
+    public function composerInstall():void{
+        $this->taskComposerInstall()->run();
+    }
+
+    /**
 	 * @return void
 	 */
 	public function copy(): void
