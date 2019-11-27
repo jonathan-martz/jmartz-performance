@@ -111,7 +111,14 @@ class RoboFile extends Tasks
         }
     }
 
-	/**
+    /**
+     * @return void
+     */
+    public function composerInstall():void{
+        $this->taskComposerInstall()->run();
+    }
+
+    /**
 	 * @return void
 	 */
 	public function copy(): void
